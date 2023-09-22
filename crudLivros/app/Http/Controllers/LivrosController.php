@@ -12,7 +12,7 @@ class LivrosController extends Controller
      */
     public function index()
     {
-        //
+        return response(Livros::all(), 200);
     }
 
     /**
@@ -20,30 +20,59 @@ class LivrosController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = $request->validate([
+            'titulo'=>['required','string'],
+            'autor'=>['required','string'],
+            'genero'=>['required','string'],
+            'quant_paginas'=>['required','integer']
+        ]);
+        return response(Livros::create($validate), 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Livros $livros)
+    public function show($id)
     {
-        //
+        $livro = Livros::find($id);
+        return response($livro, 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Livros $livros)
+    public function update_disponibilidade($id)
     {
-        //
+        $livro = Livros::find($id);
+        $livro->update([
+            'disponibilidade'=>$livro['disponibilidade'] === 'Disponível' ? 'Indisponível' : 'Disponível'
+        ]);
+        return response($livro, 200);
     }
 
+
+    public function update(Request $request, $id)
+        {
+            $validate = $request->validate([
+                'titulo'=>['required','string'],
+                'autor' =>['required','string'],
+                'genero'=>['required','string'],
+                'quant_paginas'=>['required','integer']
+            ]);
+            $livro = Livros::find($id);
+            $livro->update($validate);
+            return response($livro, 200);
+        }
+
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storage.S
      */
-    public function destroy(Livros $livros)
+    public function destroy(Request $request)
     {
-        //
+        $ids = $request->validate([
+            'ids'=>['required','array']
+        ]);
+        $livro= Livros::destroy($ids['ids']);
+        return response($livro, 200);
     }
 }

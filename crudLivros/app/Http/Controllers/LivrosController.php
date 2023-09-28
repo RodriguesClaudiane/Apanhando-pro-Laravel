@@ -12,7 +12,11 @@ class LivrosController extends Controller
      */
     public function index()
     {
-        return response(Livros::all(), 200);
+        $response =[
+            'livro' => Livros::all(),
+            'success' => true
+        ];
+        return response($response, 200);
     }
 
     /**
@@ -26,7 +30,11 @@ class LivrosController extends Controller
             'genero'=>['required','string'],
             'quant_paginas'=>['required','integer']
         ]);
-        return response(Livros::create($validate), 201);
+        $response = [
+            'livro' => Livros::create($validate),
+            'success'=> true
+        ];
+        return response($response,201);
     }
 
     /**
@@ -35,7 +43,7 @@ class LivrosController extends Controller
     public function show($id)
     {
         $livro = Livros::find($id);
-        return response($livro, 200);
+        return response($livro, 201);
     }
 
     /**
